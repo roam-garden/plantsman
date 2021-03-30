@@ -1,7 +1,11 @@
-import * as React from "react";
-import { render } from "react-dom";
-import App from "./components/App";
+import * as React from "react"
+import {render} from "react-dom"
+import App from "./components/App"
 
-const rootEl = document.getElementById("root");
+// todo check for the appropriate title
+const parentRoot = document.getElementsByClassName("rm-title-display").item(0) as HTMLElement
+let rootEl = document.createElement("div")
 
-render(<App />, rootEl);
+parentRoot.parentElement?.appendChild(rootEl)
+
+render(<App/>, rootEl)

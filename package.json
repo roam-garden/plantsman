@@ -41,6 +41,7 @@
     "@types/node": "^14.14.34",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.2",
+    "@types/react-tag-autocomplete": "^6.1.0",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
     "babel-loader": "^8.2.2",
@@ -68,5 +69,9 @@
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.7.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@aws-amplify/ui-react": "^1.0.6",
+    "aws-amplify": "^3.3.26",
+    "react-tag-autocomplete": "^6.1.0"
+  }
 }

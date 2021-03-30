@@ -10,6 +10,13 @@ module.exports = {
   module: {
     rules: [
       {
+        // https://github.com/aws-amplify/amplify-js/issues/7744
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+      {
         test: [/\.jsx?$/, /\.tsx?$/],
         use: ["babel-loader"],
         exclude: /node_modules/,
@@ -32,10 +39,6 @@ module.exports = {
     ],
   },
   plugins: [new HtmlWebpackPlugin({ template: "index.html.ejs" })],
-  externals: {
-    react: "React",
-    "react-dom": "ReactDOM",
-  },
   performance: {
     hints: false,
   },
