@@ -1,7 +1,8 @@
-import * as React from "react";
+import * as React from "react"
 import Amplify from "aws-amplify"
 import amplifyConfig from "../amplify/config"
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import {withAuthenticator} from '@aws-amplify/ui-react'
+import {UploadForm} from "@roam-garden/landscaping-toolbox"
 
 Amplify.configure({
     ...amplifyConfig,
@@ -10,24 +11,12 @@ Amplify.configure({
 })
 
 
-import { hot } from "react-hot-loader";
+// const reactLogo = require("./../assets/img/react_logo.svg");
+// import "./../assets/scss/App.scss";
 
-const reactLogo = require("./../assets/img/react_logo.svg");
-import "./../assets/scss/App.scss";
-
-class App extends React.Component<Record<string, unknown>, undefined> {
-  public render() {
-    return (
-      <div className="app">
-        <h1>Hello World!</h1>
-        <p>Foo to the barz!!!</p>
-        <img src={reactLogo.default} height="480" />
-      </div>
-    );
-  }
-}
+export const App = () => <UploadForm/>
 
 
-declare let module: Record<string, unknown>;
+declare let module: Record<string, unknown>
 
-export default hot(module)(withAuthenticator(App));
+export default withAuthenticator(App)
