@@ -1,0 +1,133 @@
+/**
+ * <div class="react-tags">
+ *   <div class="react-tags__selected">
+ *     <button class="react-tags__selected-tag">
+ *       <span class="react-tags__selected-tag-name" />
+ *     </button>
+ *   </div>
+ *   <div class="react-tags__search">
+ *     <div class="react-tags__search-wrapper">
+ *       <input class="react-tags__search-input" />
+ *       <div />
+ *     </div>
+ *     <div class="react-tags__suggestions">
+ *       <ul>
+ *         <li class="is-active">
+ *           <mark />
+ *         </li>
+ *         <li class="is-disabled">
+ *           <mark />
+ *         </li>
+ *       </ul>
+ *     </div>
+ *   </div>
+ */
+.react-tags {
+    position: relative;
+    padding: 6px 0 0 6px;
+
+    /* clicking anywhere will focus the input */
+    cursor: text;
+
+    /* Matching theme-ui theme*/
+    border: 1px solid;
+    border-radius: 8px;
+    border-color: var(--theme-ui-colors-border_color,#E9EDF5);
+
+    height: 60px;
+    line-height: inherit;
+    font-size: inherit;
+    margin-bottom: 15px;
+}
+
+.is-disabled .react-tags__selected-tag-name {
+    color: grey;
+}
+
+.react-tags.is-invalid {
+    border-color: var(--ck-color-base-error,#db3700);
+    box-shadow: 0 0 0 2px var(--ck-color-focus-error-shadow,rgba(255,64, 31, 0.3));
+}
+
+.react-tags.is-focused {
+    border-color: var(--theme-ui-colors-primary,#3CC68A);
+    box-shadow: 0 0 0 2px var(--theme-ui-colors-primary,#3CC68A);
+}
+
+.react-tags__selected {
+    display: inline;
+}
+
+.react-tags__selected-tag {
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0 6px 6px 0;
+    padding: 6px 8px;
+    border: 1px solid #D1D1D1;
+    border-radius: 6px;
+    background: #F1F1F1;
+
+    /* match the font styles */
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.react-tags__selected-tag:after {
+    content: '\2715';
+    color: #AAA;
+    margin-left: 8px;
+}
+
+.react-tags__selected-tag:hover,
+.react-tags__selected-tag:focus {
+    border-color: var(--theme-ui-colors-primary,#3CC68A);
+}
+
+.is-disabled .react-tags__selected-tag:hover,
+.is-disabled .react-tags__selected-tag:focus {
+    border-color: #D1D1D1;
+}
+
+
+.react-tags__search {
+    display: inline-block;
+
+    /* match tag layout */
+    padding: 7px 2px;
+    margin-bottom: 6px;
+
+    /* prevent autoresize overflowing the container */
+    max-width: 100%;
+}
+
+@media screen and (min-width: 30em) {
+
+    .react-tags__search {
+        /* this will become the offsetParent for suggestions */
+        position: relative;
+    }
+
+}
+
+.react-tags__search-input {
+    /* prevent autoresize overflowing the container */
+    max-width: 100%;
+
+    /* remove styles and layout from this element */
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+
+    /* match the font styles */
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.react-tags__search-input::-ms-clear {
+    display: none;
+}
+
+.react-tags__search-input:disabled {
+    display: none;
+}
