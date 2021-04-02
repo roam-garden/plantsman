@@ -28,8 +28,8 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
     const [entryPageTag, setEntryPageTag] = useLocalState<Tag[]>("entryPageTag", [])
     const [allPagesPublic, setAllPagesPublic] = useLocalState("allPagesPublic", false)
     const [processing, setProcessing] = useState(false)
-    const [file, setFile] = useState<File | undefined>(null)
-    const [cssFile, setCssFile] = useState<File | undefined>(null)
+    const [file, setFile] = useState<File | undefined>(undefined)
+    const [cssFile, setCssFile] = useState<File | undefined>(undefined)
 
     useEffect(() => {
         (async () => {
@@ -152,12 +152,12 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
 
         setProcessing(true)
 
-        let dataToUpload: File | string = file
+        let dataToUpload: File | string | undefined = file
         if (roamDataSupplier) {
             console.log("starting the export")
             const roamData = await executeAfterDelay(0, roamDataSupplier)
             dataToUpload = JSON.stringify(roamData)
-            console.log("export finished the export")
+            console.log("finished the export")
         }
 
         const [url, cssUrl] = await Promise.all([upload(dataToUpload), upload(cssFile)])
