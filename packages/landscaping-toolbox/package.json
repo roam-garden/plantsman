@@ -56,6 +56,7 @@
     "@aws-amplify/ui-react": "^1.0.6",
     "aws-amplify": "^3.3.26",
     "react-tag-autocomplete": "^6.1.0",
+    "roam-export": "^0.1.2",
     "theme-ui": "^0.6.1",
     "uuid": "^8.3.2"
   }

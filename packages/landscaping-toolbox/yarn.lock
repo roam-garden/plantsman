@@ -5315,7 +5315,7 @@ lodash.sortby@^4.7.0:
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
 
-lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20:
+lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -6098,6 +6098,13 @@ rimraf@^3.0.0:
   integrity sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==
   dependencies:
     glob "^7.1.3"
+
+roam-export@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/roam-export/-/roam-export-0.1.2.tgz#29e76c5531c898ec734b5feb4eaf26df8b45a6db"
+  integrity sha512-QHrDM6zeG69Hwvc8quMUKKET4WdhDuAx/AbpnJ+HT5zyQ/bdDw331u774erAI/QfdkufZtp/JlmpXkbBn/A9fA==
+  dependencies:
+    lodash "^4.17.21"
 
 rsvp@^4.8.4:
   version "4.8.5"

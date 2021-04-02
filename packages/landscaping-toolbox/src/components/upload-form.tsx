@@ -9,10 +9,18 @@ import {TagInput} from "./tag-input"
 import {useLocalState} from "../common/react"
 import {gardenApi} from "../config"
 import {upload} from "../common/storage"
+import {RoamPage} from "roam-export"
+import {executeAfterDelay} from "../common/async"
+
 // import {SubscriptionModal} from "../components/subscription-modal"
 
 
-export const UploadForm = () => {
+interface UploadFormProps {
+    allPageNames: string[]
+    roamDataSupplier?: () => RoamPage[]
+}
+
+export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) => {
     const [titlePlaceholder, setTitlePlaceholder] = useState("")
     const [title, setTitle] = useLocalState("title", "")
     const [publicTags, setPublicTags] = useLocalState<Tag[]>("publicTags", [{id: 0, name: "make-public"}])
@@ -29,6 +37,8 @@ export const UploadForm = () => {
             setTitlePlaceholder(`${user.getUsername()}'s Garden`)
         })()
     }, [])
+
+    const allPageTags = allPageNames.map(it => ({name: it}))
 
     return (
         // <SubscriptionModal/>
@@ -50,6 +60,7 @@ export const UploadForm = () => {
                     <Label htmlFor='entry'>Starting page *</Label>
                     <TagInput minTags={1}
                               maxTags={1}
+                              suggestions={allPageTags}
                               tags={entryPageTag}
                               setTags={setEntryPageTag}
                               placeholderText="About these notes"/>
@@ -63,26 +74,34 @@ export const UploadForm = () => {
                     </Label>
 
                     <Label>Make pages with these tags public (all pages are private by default) *</Label>
-                    <TagInput minTags={1} tags={publicTags} setTags={setPublicTags} disabled={allPagesPublic}/>
+                    <TagInput minTags={1}
+                              suggestions={allPageTags}
+                              tags={publicTags}
+                              setTags={setPublicTags}
+                              disabled={allPagesPublic}/>
 
                     <Label>Make blocks with these tags private</Label>
-                    <TagInput tags={privateTags} setTags={setPrivateTags}/>
+                    <TagInput tags={privateTags}
+                              suggestions={allPageTags}
+                              setTags={setPrivateTags}/>
 
-                    <Label htmlFor='db'>Your graph JSON (
-                        <A
-                            href="https://roamresearch.freshdesk.com/support/solutions/articles/64000248331-how-to-export-your-roam-graph">
-                            how to get it</A>)
-                    </Label>
-                    <Input
-                        type='file'
-                        name='db'
-                        mb={3}
-                        accept='application/json'
-                        onChange={
-                            e => setFile(e.target.files?.[0])
-                        }
-                        required
-                    />
+                    {!roamDataSupplier && <>
+                        <Label htmlFor='db'>Your graph JSON (
+                            <A
+                              href="https://roamresearch.freshdesk.com/support/solutions/articles/64000248331-how-to-export-your-roam-graph">
+                                how to get it</A>)
+                        </Label>
+                        <Input
+                          type='file'
+                          name='db'
+                          mb={3}
+                          accept='application/json'
+                          onChange={
+                              e => setFile(e.target.files?.[0])
+                          }
+                          required
+                        />
+                    </>}
                     <Label>Custom CSS (optional)</Label>
                     <Input
                         type='file'
@@ -114,7 +133,7 @@ export const UploadForm = () => {
             console.log("Must specify entry page")
         }
 
-        if (!file) {
+        if (!file && !roamDataSupplier) {
             result = false
             console.log("Must select file")
         }
@@ -133,7 +152,15 @@ export const UploadForm = () => {
 
         setProcessing(true)
 
-        const [url, cssUrl] = await Promise.all([upload(file), upload(cssFile)])
+        let dataToUpload: File | string = file
+        if (roamDataSupplier) {
+            console.log("starting the export")
+            const roamData = await executeAfterDelay(0, roamDataSupplier)
+            dataToUpload = JSON.stringify(roamData)
+            console.log("export finished the export")
+        }
+
+        const [url, cssUrl] = await Promise.all([upload(dataToUpload), upload(cssFile)])
         const entryPage = entryPageTag[0].name
         const payload = {
             config: {
@@ -154,6 +181,8 @@ export const UploadForm = () => {
             body: payload,
         })
         console.log(result)
+
+        setProcessing(false)
         // await navigate("/upload-success")
     }
 }

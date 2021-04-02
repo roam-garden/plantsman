@@ -1,13 +1,16 @@
 import {v4 as uuidv4} from "uuid"
 import {Storage} from "aws-amplify"
 
-export async function upload(file: File | undefined) {
+export async function upload(file: File | string | undefined) {
     if (!file) return
 
     let expiryDate = new Date()
     expiryDate.setHours(expiryDate.getHours() + 1)
 
-    let key = `${file!!.name}-${uuidv4()}`
+    //todo
+    const name = typeof file !== "string" ? file.name : "runtime"
+
+    let key = `${name}-${uuidv4()}`
     await Storage.put(key, file, {
         level: 'private',
         contentType: 'application/json',
@@ -17,6 +20,6 @@ export async function upload(file: File | undefined) {
         level: 'private',
         expires: 60 * 60, //sec
     })
-    console.log(`Uploaded ${file.name} to`, result)
+    console.log(`Uploaded ${name} to`, result)
     return result
 }
