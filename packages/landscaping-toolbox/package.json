@@ -9,6 +9,7 @@
     "watch": "npm run compile -- --watch",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run build",
+    "postbuild": "cpy '**/*' '!**/*.ts' ../dist/ --cwd=src/ --no-overwrite --parents",
     "test": "jest"
   },
   "repository": {
@@ -43,6 +44,7 @@
     "@types/theme-ui": "^0.3.7",
     "@types/uuid": "^8.3.0",
     "babel-jest": "^26.6.3",
+    "cpy-cli": "^3.1.1",
     "graphql": "^15.5.0",
     "jest": "^26.6.3",
     "jest-cli": "^26.6.3",

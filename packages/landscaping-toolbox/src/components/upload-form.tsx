@@ -9,7 +9,7 @@ import {TagInput} from "./tag-input"
 import {useLocalState} from "../common/react"
 import {gardenApi} from "../config"
 import {upload} from "../common/storage"
-import {RoamPage} from "roam-export"
+import {RoamJsonQuery, RoamPage} from "roam-export"
 import {executeAfterDelay} from "../common/async"
 
 // import {SubscriptionModal} from "../components/subscription-modal"
@@ -20,6 +20,8 @@ interface UploadFormProps {
     roamDataSupplier?: () => RoamPage[]
 }
 
+const progressIndicator = (processingState: string) => <><Spinner/> {processingState}</>
+
 export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) => {
     const [titlePlaceholder, setTitlePlaceholder] = useState("")
     const [title, setTitle] = useLocalState("title", "")
@@ -27,7 +29,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
     const [privateTags, setPrivateTags] = useLocalState<Tag[]>("privateTags", [])
     const [entryPageTag, setEntryPageTag] = useLocalState<Tag[]>("entryPageTag", [])
     const [allPagesPublic, setAllPagesPublic] = useLocalState("allPagesPublic", false)
-    const [processing, setProcessing] = useState(false)
+    const [processingState, setProcessingState] = useState("")
     const [file, setFile] = useState<File | undefined>(undefined)
     const [cssFile, setCssFile] = useState<File | undefined>(undefined)
 
@@ -38,13 +40,13 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
         })()
     }, [])
 
-    const allPageTags = allPageNames.map(it => ({name: it}))
+    const allPageTags = allPageNames.map(it => ({name: it, id: it}))
 
     return (
         // <SubscriptionModal/>
         <Box as="section" id="upload">
             <Container>
-                <Heading as={"h3"}>Create or update your garden</Heading>
+                <Heading as={"h3"}>Plant a garden</Heading>
                 <Box
                     as='form'
                     onSubmit={submit}>
@@ -113,9 +115,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
                         }
                     />
 
-                    {processing ? <Spinner/> : <Button disabled={processing || !isValid()}>
-                        Submit
-                    </Button>}
+                    {processingState ? progressIndicator(processingState) : <Button disabled={!isValid()}>Submit</Button>}
                 </Box>
             </Container>
         </Box>
@@ -146,30 +146,40 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
         return result
     }
 
+    async function getDataToUpload() {
+        if (!roamDataSupplier) {
+            return file
+        }
+
+        setProcessingState("Creating full data export")
+        const roamExport = await executeAfterDelay(0, roamDataSupplier)
+        console.log("Export done, performing filtering")
+        const {pages} = new RoamJsonQuery(roamExport, constructFilter()).getPagesToRender()
+        console.log("Export & filtering done")
+        return JSON.stringify(pages)
+    }
+
+    function constructFilter() {
+        return {
+            makeAllPagesPublic: allPagesPublic,
+            pagesToMakePublic: [entryPageName()],
+            makePagesWithTheseTagsPublic: publicTags.map(it => it.name),
+            makeBlocksWithTheseTagsPrivate: privateTags.map(it => it.name),
+        }
+    }
+
     async function submit(e: FormEvent<HTMLDivElement>) {
         e.preventDefault()
         if (!isValid()) return
 
-        setProcessing(true)
-
-        let dataToUpload: File | string | undefined = file
-        if (roamDataSupplier) {
-            console.log("starting the export")
-            const roamData = await executeAfterDelay(0, roamDataSupplier)
-            dataToUpload = JSON.stringify(roamData)
-            console.log("finished the export")
-        }
-
-        const [url, cssUrl] = await Promise.all([upload(dataToUpload), upload(cssFile)])
-        const entryPage = entryPageTag[0].name
+        setProcessingState("Initiating upload")
+        const roamData = await getDataToUpload()
+        setProcessingState("Uploading the export to Roam Garden")
+        const [url, cssUrl] = await Promise.all([upload(roamData), upload(cssFile)])
+        const entryPage = entryPageName()
         const payload = {
             config: {
-                filter: {
-                    makeAllPagesPublic: allPagesPublic,
-                    pagesToMakePublic: [entryPage],
-                    makePagesWithTheseTagsPublic: publicTags.map(it => it.name),
-                    makeBlocksWithTheseTagsPrivate: privateTags.map(it => it.name),
-                },
+                filter: constructFilter(),
                 siteTitle: title,
                 entryPage,
                 cssUrl,
@@ -182,7 +192,12 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
         })
         console.log(result)
 
-        setProcessing(false)
+        // todo success indicator on timeout
+        setProcessingState("")
         // await navigate("/upload-success")
+    }
+
+    function entryPageName() {
+        return entryPageTag[0].name
     }
 }

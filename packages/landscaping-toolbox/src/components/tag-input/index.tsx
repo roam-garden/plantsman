@@ -1,11 +1,7 @@
 import ReactTags, {Tag} from "react-tag-autocomplete"
 import React from "react"
 
-// TODO!!! how does one add css without webpack
-// https://stackoverflow.com/questions/41336858/how-to-import-css-modules-with-typescript-react-and-webpack
-// import './tag-input.css'
-// const _ = require("./tag-input.css")
-// todo need to copy it https://github.com/microsoft/TypeScript/issues/30835
+const _ = require("./tag-input.css")
 
 interface TagInputProps {
     tags: Tag[]
@@ -13,6 +9,8 @@ interface TagInputProps {
     minTags?: number
     maxTags?: number
     disabled?: boolean
+    suggestions?: Tag[]
+    placeholderText?: string
 }
 
 function getClassNames(tags: Tag[], minTags: number, disabled: boolean | undefined) {
@@ -27,7 +25,6 @@ export const TagInput = ({tags, setTags, minTags = 0, maxTags, disabled, ...rest
     onDelete={(i) => {
         if (!disabled) setTags([...tags.slice(0, i), ...tags.slice(i + 1)])
     }}
-    allowNew={true}
     classNames={getClassNames(tags, minTags, disabled)}
     inputAttributes={{disabled: disabled || (maxTags && tags.length >= maxTags)}}
     addOnBlur
