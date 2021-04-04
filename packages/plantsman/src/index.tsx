@@ -5,7 +5,7 @@ import "arrive"
 import { Navigation } from "./common/navigation"
 
 const rootId = "roam-garden-root"
-const pageToRenderOn = "roam/garden/plantsman"
+const pageToRenderOn = "roam/garden"
 
 document.arrive(".roam-article > div:first-of-type", { existing: true }, parentRoot => {
   const prevRoot = document.getElementById(rootId)
