@@ -3172,6 +3172,11 @@
     "@theme-ui/core" "^0.6.1"
     "@theme-ui/mdx" "^0.6.1"
 
+"@types/arrive@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@types/arrive/-/arrive-2.4.0.tgz#7f88b400998d46dc7a59dfbb1b6d59dfbc44f244"
+  integrity sha512-PhqkvNI/Q2w82qkxphBdoStbmVnlF90xUGrid1cEF4ORgRpGgd85391xcIAFKfFui0usDofQDCsHyfPe5yLdCQ==
+
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.12"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.12.tgz#4d8e9e51eb265552a7e4f1ff2219ab6133bdfb2d"
@@ -3884,6 +3889,11 @@ array.prototype.flatmap@^1.2.3:
     define-properties "^1.1.3"
     es-abstract "^1.18.0-next.1"
     function-bind "^1.1.1"
+
+arrive@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/arrive/-/arrive-2.4.1.tgz#564c87f20bc09b80de781124d9431695004b8020"
+  integrity sha1-VkyH8gvAm4DeeBEk2UMWlQBLgCA=
 
 asn1@~0.2.3:
   version "0.2.4"

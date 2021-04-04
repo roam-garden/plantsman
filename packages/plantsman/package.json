@@ -33,6 +33,7 @@
     "@babel/preset-env": "^7.13.10",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
+    "@types/arrive": "^2.4.0",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.34",
     "@types/react": "^17.0.3",
@@ -68,6 +69,7 @@
   "dependencies": {
     "@aws-amplify/ui-react": "^1.0.6",
     "@roam-garden/landscaping-toolbox": "^0.1.0",
+    "arrive": "^2.4.1",
     "aws-amplify": "^3.3.26",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

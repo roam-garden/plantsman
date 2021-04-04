@@ -1,24 +1,25 @@
 import * as React from "react"
-import {render} from "react-dom"
+import { render } from "react-dom"
 import App from "./components/App"
+import "arrive"
+import { Navigation } from "./common/navigation"
 
 const rootId = "roam-garden-root"
+const pageToRenderOn = "roam/garden/plantsman"
 
-const parentRoot = document
-  .getElementsByClassName("rm-title-display")
-  .item(0) as HTMLElement
+document.arrive(".roam-article > div:first-of-type", { existing: true }, parentRoot => {
+  const prevRoot = document.getElementById(rootId)
+  if (prevRoot) {
+    parentRoot.removeChild(prevRoot)
+  }
 
-const prevRoot = document.getElementById(rootId)
-if (prevRoot) {
-  parentRoot.parentElement?.removeChild(prevRoot)
-}
-// todo check for the appropriate title
-// todo currently the ui will show up only if I stop-start the thing for some reason?
-// try to render on each navigation =\?
+  if (pageToRenderOn !== Navigation.currentPageName) return
 
-const root = document.createElement("div")
-root.id = rootId
+  const root = document.createElement("div")
+  root.id = rootId
 
-parentRoot.parentElement?.appendChild(root)
+  parentRoot.appendChild(root)
+  parentRoot.insertBefore(root, parentRoot.children[1])
 
-render(<App/>, root)
+  render(<App />, root)
+})
