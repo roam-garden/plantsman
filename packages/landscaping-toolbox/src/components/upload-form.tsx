@@ -11,6 +11,11 @@ import {gardenApi} from "../config"
 import {upload} from "../common/storage"
 import {RoamJsonQuery, RoamPage} from "roam-export"
 import {executeAfterDelay} from "../common/async"
+import {Controlled as CodeMirror} from 'react-codemirror2'
+
+require('codemirror/lib/codemirror.css')
+require('codemirror/mode/css/css')
+
 
 // import {SubscriptionModal} from "../components/subscription-modal"
 
@@ -31,7 +36,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
     const [allPagesPublic, setAllPagesPublic] = useLocalState("allPagesPublic", false)
     const [processingState, setProcessingState] = useState("")
     const [file, setFile] = useState<File | undefined>(undefined)
-    const [cssFile, setCssFile] = useState<File | undefined>(undefined)
+    const [cssCode, setCssCode] = useLocalState("cssCode", "")
 
     useEffect(() => {
         (async () => {
@@ -48,16 +53,16 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
             <Container>
                 <Heading as={"h3"}>Plant a garden</Heading>
                 <Box
-                    as='form'
-                    onSubmit={submit}>
+                  as='form'
+                  onSubmit={submit}>
                     <Label htmlFor='title'>Garden Title *</Label>
                     <Input
-                        name="title"
-                        mb={3}
-                        value={title}
-                        onChange={event => setTitle(event.target.value)}
-                        placeholder={titlePlaceholder}
-                        required
+                      name="title"
+                      mb={3}
+                      value={title}
+                      onChange={event => setTitle(event.target.value)}
+                      placeholder={titlePlaceholder}
+                      required
                     />
                     <Label htmlFor='entry'>Starting page *</Label>
                     <TagInput minTags={1}
@@ -69,8 +74,8 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
 
                     <Label>
                         <Checkbox
-                            checked={allPagesPublic}
-                            onChange={event => setAllPagesPublic(event.target.checked)}
+                          checked={allPagesPublic}
+                          onChange={event => setAllPagesPublic(event.target.checked)}
                         />
                         Make All pages public
                     </Label>
@@ -104,22 +109,44 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
                           required
                         />
                     </>}
-                    <Label>Custom CSS (optional)</Label>
-                    <Input
-                        type='file'
-                        name='db'
-                        mb={3}
-                        accept='text/css'
-                        onChange={
-                            e => setCssFile(e.target.files?.[0])
-                        }
-                    />
 
-                    {processingState ? progressIndicator(processingState) : <Button disabled={!isValid()}>Submit</Button>}
+                    <Label>Custom CSS (optional)</Label>
+                    <CodeEditor />
+
+                    {processingState ? progressIndicator(processingState) :
+                      <Button disabled={!isValid()}>Submit</Button>}
                 </Box>
             </Container>
         </Box>
     )
+
+    function CodeEditor() {
+        return <Box
+          sx={{
+              marginTop: "1em",
+              marginBottom: "1em",
+              ".CodeMirror": {
+                  maxHeight: "20em",
+
+                  ".CodeMirror-scroll": {
+                      height: "100%",
+                  },
+              },
+          }}
+        >
+            <CodeMirror
+              value={cssCode}
+              options={{
+                  mode: 'css',
+                  lineNumbers: true,
+              }}
+              onBeforeChange={(editor, data, value) => {
+                  setCssCode(value)
+              }}
+              onKeyHandled={(_, __, e) => e.stopPropagation()}
+            />
+        </Box>
+    }
 
     function isValid() {
         let result = true
@@ -175,7 +202,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
         setProcessingState("Initiating upload")
         const roamData = await getDataToUpload()
         setProcessingState("Uploading the export to Roam Garden")
-        const [url, cssUrl] = await Promise.all([upload(roamData), upload(cssFile)])
+        const [url, cssUrl] = await Promise.all([upload(roamData), upload(cssCode)])
         const entryPage = entryPageName()
         const payload = {
             config: {
@@ -187,9 +214,8 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
             dbUrl: url,
         }
         console.log("sending", payload)
-        const result = await API.put(gardenApi, "/garden", {
-            body: payload,
-        })
+      // todo don't commit
+        const result = await API.put(gardenApi, "/garden", {body: payload,})
         console.log(result)
 
         // todo success indicator on timeout
