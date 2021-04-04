@@ -19,11 +19,11 @@
   },
   "homepage": "https://github.com/roam-garden/plantsman",
   "scripts": {
-    "build": "yarn run clean-dist && webpack --config=configs/webpack/prod.js",
+    "build": "cp aws-exports.main.js src/aws-exports.js && yarn run clean-dist && webpack --config=configs/webpack/prod.js",
     "clean-dist": "rimraf dist/*",
     "lint": "eslint './src/**/*.{js,ts,tsx}' --quiet",
     "start": "yarn run start-dev",
-    "start-dev": "webpack serve --config=configs/webpack/dev.js",
+    "start-dev": "cp aws-exports.beta.js src/aws-exports.js && webpack serve --config=configs/webpack/dev.js",
     "start-prod": "yarn run build && node express.js",
     "test": "jest --coverage --watchAll --config=configs/jest.json"
   },

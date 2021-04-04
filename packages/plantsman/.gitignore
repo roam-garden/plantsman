@@ -4,3 +4,7 @@ node_modules/
 src/**/*.jsx
 tests/__coverage__/
 tests/**/*.jsx
+
+.env.*
+src/aws-exports.js
+aws-exports.*.js
