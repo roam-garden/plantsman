@@ -111,7 +111,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
                     </>}
 
                     <Label>Custom CSS (optional)</Label>
-                    <CodeEditor />
+                    {codeEditor()}
 
                     {processingState ? progressIndicator(processingState) :
                       <Button disabled={!isValid()}>Submit</Button>}
@@ -120,7 +120,10 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
         </Box>
     )
 
-    function CodeEditor() {
+    /**
+     * Making it a proper components interferes with CodeMirror rendering somehow (cursor disappearance?)
+     */
+    function codeEditor() {
         return <Box
           sx={{
               marginTop: "1em",
