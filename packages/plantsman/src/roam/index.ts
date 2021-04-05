@@ -1,8 +1,5 @@
-import {
-  RoamBlock as RoamExportBlock,
-  RoamPage as RoamExportPage,
-} from "roam-export"
-import { RawRoamBlock, RawRoamPage, RoamNode } from "./types"
+import {RoamBlock as RoamExportBlock, RoamPage as RoamExportPage} from "roam-export"
+import {RawRoamBlock, RawRoamPage, RoamNode} from "./types"
 
 const Roam = {
   query(query: string, ...params: any[]): any[] {
@@ -24,9 +21,7 @@ const Roam = {
   },
 
   listPageIds() {
-    return this.query(
-      "[:find ?page :where [?page :node/title ?title] [?page :block/uid ?uid]]",
-    ).flat()
+    return this.query("[:find ?page :where [?page :node/title ?title] [?page :block/uid ?uid]]").flat()
   },
 
   listPages(): RawRoamPage[] {
@@ -51,13 +46,15 @@ abstract class RoamEntity {
   abstract toExportJson(): RoamExportPage | RoamExportBlock
 
   get rawChildren(): RawRoamBlock[] | undefined {
-    return this.rawEntity[":block/children"]?.map((it) =>
-      Roam.pull(it[":db/id"]),
-    ) as RawRoamBlock[]
+    const children = this.rawEntity[":block/children"]?.map(it => Roam.pull(it[":db/id"])) as RawRoamBlock[]
+    /**
+     * Sorted because the order of the children returned is ~arbitrary
+     */
+    return children?.sort((a, b) => a[":block/order"] - b[":block/order"])
   }
 
   get children(): RoamBlock[] | undefined {
-    return this.rawChildren?.map((it) => new RoamBlock(it))
+    return this.rawChildren?.map(it => new RoamBlock(it))
   }
 }
 
@@ -69,7 +66,7 @@ class RoamPage extends RoamEntity {
   toExportJson(): RoamExportPage {
     return {
       title: this.rawPage[":node/title"],
-      children: this.children?.map((it) => it.toExportJson()),
+      children: this.children?.map(it => it.toExportJson()),
       "create-time": this.rawPage[":create/time"],
       //todo
       // "create-email": this.rawPage.,
@@ -89,9 +86,9 @@ class RoamBlock extends RoamEntity {
     return {
       // ":block/refs": todo
       "text-align": this.rawBlock[":block/text-align"],
-      children: this.children?.map((it) => it.toExportJson()),
+      children: this.children?.map(it => it.toExportJson()),
       heading: this.rawBlock[":block/heading"],
-      refs: this.rawBlock[":block/refs"]?.map((it) => ({
+      refs: this.rawBlock[":block/refs"]?.map(it => ({
         uid: Roam.getUid(it),
       })),
       string: this.rawBlock[":block/string"],
@@ -107,5 +104,5 @@ class RoamBlock extends RoamEntity {
 }
 
 export function generateRoamExport() {
-  return Roam.listPages().map((it) => new RoamPage(it).toExportJson())
+  return Roam.listPages().map(it => new RoamPage(it).toExportJson())
 }
