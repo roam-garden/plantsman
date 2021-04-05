@@ -11,10 +11,8 @@ import {gardenApi} from "../config"
 import {upload} from "../common/storage"
 import {RoamJsonQuery, RoamPage} from "roam-export"
 import {executeAfterDelay} from "../common/async"
-import {Controlled as CodeMirror} from 'react-codemirror2'
 
-require('codemirror/lib/codemirror.css')
-require('codemirror/mode/css/css')
+import {CssEditor} from "./css-editor"
 
 // import {SubscriptionModal} from "../components/subscription-modal"
 
@@ -41,6 +39,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
     const [processingState, setProcessingState] = useState("")
     const [file, setFile] = useState<File | undefined>(undefined)
     const [cssCode, setCssCode] = useLocalState("cssCode", "")
+    const [cssValid, setCssValid] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -54,7 +53,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
     return (
         // <SubscriptionModal/>
         <Box as="section" id="upload" sx={{
-            "label": {
+            " label": {
                 marginBottom: "0.7em",
             }
         }}>
@@ -118,7 +117,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
                     </>}
 
                     <Label>Custom CSS (optional)</Label>
-                    {codeEditor()}
+                    {CssEditor({cssCode, setCssCode, cssValid, setCssValid})}
 
                     {processingState ? progressIndicator(processingState) :
                       <Button disabled={!isValid()}>Submit</Button>}
@@ -127,35 +126,6 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
         </Box>
     )
 
-    /**
-     * Making it a proper components interferes with CodeMirror rendering somehow (cursor disappearance?)
-     */
-    function codeEditor() {
-        return <Box
-          sx={{
-              marginBottom: "1em",
-              ".CodeMirror": {
-                  maxHeight: "20em",
-
-                  ".CodeMirror-scroll": {
-                      height: "100%",
-                  },
-              },
-          }}
-        >
-            <CodeMirror
-              value={cssCode}
-              options={{
-                  mode: 'css',
-                  lineNumbers: true,
-              }}
-              onBeforeChange={(editor, data, value) => {
-                  setCssCode(value)
-              }}
-              onKeyHandled={(_, __, e) => e.stopPropagation()}
-            />
-        </Box>
-    }
 
     function isValid() {
         let result = true
@@ -177,6 +147,11 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
         if (!title) {
             result = false
             console.log("Must enter title")
+        }
+
+        if (!cssValid) {
+            result = false
+            console.log("CSS is invalid")
         }
 
         return result
