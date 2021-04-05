@@ -5,6 +5,8 @@ import { withAuthenticator } from "@aws-amplify/ui-react"
 import { UploadForm } from "@roam-garden/landscaping-toolbox"
 import { getAllPageNames } from "roam-client"
 import { generateRoamExport } from "../roam"
+import { Box, Heading, ThemeProvider } from "theme-ui"
+import theme from "../theme"
 
 Amplify.configure({
   ...amplifyConfig,
@@ -12,8 +14,21 @@ Amplify.configure({
   authenticationFlowType: "USER_PASSWORD_AUTH",
 })
 
-export const App = () => {
-  return <UploadForm allPageNames={getAllPageNames()} roamDataSupplier={generateRoamExport} />
-}
+export const App = () => (
+  <ThemeProvider theme={theme}>
+    <Box sx={{ marginBottom: "1em" }}>
+      <Heading
+        as={"h2"}
+        sx={{
+          textAlign: "center",
+          fontSize: "2.5rem",
+        }}
+      >
+        Plant a garden
+      </Heading>
+      <UploadForm allPageNames={getAllPageNames()} roamDataSupplier={generateRoamExport} />
+    </Box>
+  </ThemeProvider>
+)
 
 export default withAuthenticator(App)

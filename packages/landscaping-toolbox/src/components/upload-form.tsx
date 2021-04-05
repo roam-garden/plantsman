@@ -1,6 +1,6 @@
 import React, {FormEvent, useEffect, useState} from 'react'
 
-import {Box, Button, Checkbox, Container, Heading, Input, Label, Link as A, Spinner} from 'theme-ui'
+import {Box, Button, Checkbox, Container, Flex, Input, Label, Link as A, Spinner} from 'theme-ui'
 import {Tag} from 'react-tag-autocomplete'
 import {API, Auth} from 'aws-amplify'
 
@@ -16,16 +16,20 @@ import {Controlled as CodeMirror} from 'react-codemirror2'
 require('codemirror/lib/codemirror.css')
 require('codemirror/mode/css/css')
 
-
 // import {SubscriptionModal} from "../components/subscription-modal"
-
 
 interface UploadFormProps {
     allPageNames: string[]
     roamDataSupplier?: () => RoamPage[]
 }
 
-const progressIndicator = (processingState: string) => <><Spinner/> {processingState}</>
+const progressIndicator = (processingState: string) => <Flex sx={{
+    alignItems: "center"
+}}>
+    <Spinner/>
+    <Box sx={{textAlign: "center"}}>{processingState}</Box>
+</Flex>
+
 
 export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) => {
     const [titlePlaceholder, setTitlePlaceholder] = useState("")
@@ -49,9 +53,12 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
 
     return (
         // <SubscriptionModal/>
-        <Box as="section" id="upload">
+        <Box as="section" id="upload" sx={{
+            "label": {
+                marginBottom: "0.7em",
+            }
+        }}>
             <Container>
-                <Heading as={"h3"}>Plant a garden</Heading>
                 <Box
                   as='form'
                   onSubmit={submit}>
@@ -126,7 +133,6 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
     function codeEditor() {
         return <Box
           sx={{
-              marginTop: "1em",
               marginBottom: "1em",
               ".CodeMirror": {
                   maxHeight: "20em",
