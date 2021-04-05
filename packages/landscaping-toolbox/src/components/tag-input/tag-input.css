@@ -133,13 +133,12 @@
     display: none;
 }
 
-/*todo look into updating to better match overall style*/
-
 .react-tags__suggestions {
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
+    z-index: 99;
 }
 
 @media screen and (min-width: 30em) {
