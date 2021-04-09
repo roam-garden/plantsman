@@ -1,6 +1,6 @@
 import React, {FormEvent, useEffect, useState} from 'react'
 
-import {Box, Button, Checkbox, Container, Flex, Input, Label, Link as A, Spinner} from 'theme-ui'
+import {Box, Button, Checkbox, Container, Input, Label, Link as A} from 'theme-ui'
 import {Tag} from 'react-tag-autocomplete'
 import {API, Auth} from 'aws-amplify'
 
@@ -13,6 +13,7 @@ import {RoamJsonQuery, RoamPage} from "roam-export"
 import {executeAfterDelay} from "../common/async"
 
 import {CssEditor} from "./css-editor"
+import {ProgressIndicator, useSuccessIndicator} from "./progress-indicator"
 
 // import {SubscriptionModal} from "../components/subscription-modal"
 
@@ -20,17 +21,6 @@ interface UploadFormProps {
   allPageNames: string[]
   roamDataSupplier?: () => RoamPage[]
 }
-
-const progressIndicator = (processingState: string) => <Flex sx={{
-  alignItems: "center",
-}}>
-  <Spinner/>
-  <Box sx={{
-    textAlign: "center",
-    flexGrow: 1,
-  }}>{processingState}</Box>
-</Flex>
-
 
 export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) => {
   const [titlePlaceholder, setTitlePlaceholder] = useState("")
@@ -43,6 +33,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
   const [file, setFile] = useState<File | undefined>(undefined)
   const [cssCode, setCssCode] = useLocalState("cssCode", "")
   const [cssValid, setCssValid] = useState(false)
+  const [isSuccess, indicateSuccess] = useSuccessIndicator()
 
   useEffect(() => {
     (async () => {
@@ -122,7 +113,8 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
           <Label>Custom CSS (optional)</Label>
           {CssEditor({cssCode, setCssCode, cssValid, setCssValid})}
 
-          {processingState ? progressIndicator(processingState) :
+          {processingState ?
+            <ProgressIndicator processingState={processingState} isSuccess={isSuccess}/> :
             <Button disabled={!isValid()}>Submit</Button>}
         </Box>
       </Container>
@@ -205,7 +197,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
     const result = await API.put(gardenApi, "/garden", {body: payload})
     console.log(result)
 
-    // todo success indicator on timeout
+    await indicateSuccess()
     setProcessingState("")
     // await navigate("/upload-success")
   }

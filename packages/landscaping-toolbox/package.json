@@ -42,6 +42,7 @@
     "@types/jest": "^26.0.20",
     "@types/lodash": "^4.14.168",
     "@types/react-tag-autocomplete": "^6.1.0",
+    "@types/react-transition-group": "^4.4.1",
     "@types/theme-ui": "^0.3.7",
     "@types/uuid": "^8.3.0",
     "babel-jest": "^26.6.3",
@@ -62,6 +63,7 @@
     "csstree-validator": "^2.0.1",
     "react-codemirror2": "^7.2.1",
     "react-tag-autocomplete": "^6.1.0",
+    "react-transition-group": "^4.4.1",
     "roam-export": "^0.1.2",
     "theme-ui": "^0.6.1",
     "uuid": "^8.3.2"
