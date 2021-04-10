@@ -18,7 +18,14 @@ Amplify.configure({
 // todo need to disable SignUp or change it to not collect number similar to main site
 const AuthenticatedApp = withAuthenticator(() => (
   <Layout>
-    <Box sx={{ marginBottom: "1em" }}>
+    <Box
+      id="subscription-modal-parent"
+      sx={{
+        marginBottom: "1em",
+        // a bit of a hack to shift the parent element for modal
+        transform: "scale(1)",
+      }}
+    >
       <Heading
         as={"h2"}
         sx={{

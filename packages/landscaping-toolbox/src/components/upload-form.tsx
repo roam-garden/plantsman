@@ -15,7 +15,7 @@ import {executeAfterDelay} from "../common/async"
 import {CssEditor} from "./css-editor"
 import {ProgressIndicator, useSuccessIndicator} from "./progress-indicator"
 
-// import {SubscriptionModal} from "../components/subscription-modal"
+import {SubscriptionExistsModal} from "./subscription-exists-modal"
 
 interface UploadFormProps {
   allPageNames: string[]
@@ -45,12 +45,12 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
   const allPageTags = allPageNames.map(it => ({name: it, id: it}))
 
   return (
-    // <SubscriptionModal/>
     <Box as="section" id="upload" sx={{
       " label": {
         marginBottom: "0.7em",
       },
     }}>
+      <SubscriptionExistsModal/>
       <Container>
         <Box
           as="form"
@@ -199,7 +199,6 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
 
     await indicateSuccess()
     setProcessingState("")
-    // await navigate("/upload-success")
   }
 
   function entryPageName() {

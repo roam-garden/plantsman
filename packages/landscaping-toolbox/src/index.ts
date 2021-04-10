@@ -6,4 +6,5 @@ export * from "./components/user/user-indicator"
 export * from "./components/auth/sign-out"
 export * from "./common/react"
 export * from "./common/async"
+export * from "./billing"
 // todo a better way
