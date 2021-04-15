@@ -1,5 +1,6 @@
-import {RoamBlock as RoamExportBlock, RoamPage as RoamExportPage} from "roam-export"
-import {RawRoamBlock, RawRoamPage, RoamNode} from "./types"
+import { RoamBlock as RoamExportBlock, RoamPage as RoamExportPage } from "roam-export"
+import { RawRoamBlock, RawRoamPage, RoamNode } from "./types"
+import { Navigation } from "../common/navigation"
 
 const Roam = {
   query(query: string, ...params: any[]): any[] {
@@ -25,13 +26,6 @@ const Roam = {
   },
 
   listPages(): RawRoamPage[] {
-    // return this.query(
-    //   "[:find ?page ?uid ?title :where [?page :node/title ?title] [?page :block/uid ?uid]]",
-    // ).map(([dbId, uid, name]: [string, string, string]) => ({
-    //   dbId,
-    //   uid,
-    //   name,
-    // }))
     return this.listPageIds().map((dbId: number) => this.pull(dbId))
   },
 
@@ -40,7 +34,7 @@ const Roam = {
   },
 }
 
-abstract class RoamEntity {
+export abstract class RoamEntity {
   constructor(readonly rawEntity: RawRoamBlock | RawRoamPage) {}
 
   abstract toExportJson(): RoamExportPage | RoamExportBlock
@@ -56,11 +50,24 @@ abstract class RoamEntity {
   get children(): RoamBlock[] | undefined {
     return this.rawChildren?.map(it => new RoamBlock(it))
   }
+
+  get uid(): string {
+    return this.rawEntity[":block/uid"]
+  }
+
+  get url(): string {
+    return Navigation.urlForUid(this.uid)
+  }
 }
 
-class RoamPage extends RoamEntity {
+export class RoamPage extends RoamEntity {
   constructor(readonly rawPage: RawRoamPage) {
     super(rawPage)
+  }
+
+  static fromName(name: string) {
+    const rawPage = Roam.queryFirst("[:find ?e :in $ ?a :where [?e :node/title ?a]]", name)
+    return rawPage ? new RoamPage(rawPage) : null
   }
 
   toExportJson(): RoamExportPage {
@@ -77,7 +84,7 @@ class RoamPage extends RoamEntity {
   }
 }
 
-class RoamBlock extends RoamEntity {
+export class RoamBlock extends RoamEntity {
   constructor(readonly rawBlock: RawRoamBlock) {
     super(rawBlock)
   }
