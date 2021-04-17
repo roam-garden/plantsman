@@ -1,8 +1,7 @@
 import * as React from "react"
 import Amplify from "aws-amplify"
 import amplifyConfig from "../aws-exports"
-import { withAuthenticator } from "@aws-amplify/ui-react"
-import { UploadForm } from "@roam-garden/landscaping-toolbox"
+import { UploadForm, withAuth } from "@roam-garden/landscaping-toolbox"
 import { getAllPageNames } from "roam-client"
 import { generateRoamExport } from "../roam"
 import { Box, Heading, ThemeProvider } from "theme-ui"
@@ -15,8 +14,7 @@ Amplify.configure({
   authenticationFlowType: "USER_PASSWORD_AUTH",
 })
 
-// todo need to disable SignUp or change it to not collect number similar to main site
-const AuthenticatedApp = withAuthenticator(() => (
+const AuthenticatedApp = withAuth(() => (
   <Layout>
     <Box
       id="subscription-modal-parent"

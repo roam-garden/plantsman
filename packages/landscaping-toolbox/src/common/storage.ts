@@ -7,7 +7,6 @@ export async function upload(file: File | string | undefined) {
     let expiryDate = new Date()
     expiryDate.setHours(expiryDate.getHours() + 1)
 
-    //todo
     const name = typeof file !== "string" ? file.name : "runtime"
 
     let key = `${name}-${uuidv4()}`
