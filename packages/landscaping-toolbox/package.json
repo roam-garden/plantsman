@@ -1,7 +1,7 @@
 {
   "name": "@roam-garden/landscaping-toolbox",
-  "version": "0.1.0",
-  "description": "Common UI things for Roam Garden managment",
+  "version": "0.1.1",
+  "description": "Common UI things for Roam Garden management",
   "main": "dist/index.js",
   "scripts": {
     "build": "npm run clean && npm run compile",
@@ -30,7 +30,7 @@
   "bugs": {
     "url": "https://github.com/roam-garden/plantsman/issues"
   },
-  "homepage": "https://github.com/roam-garden/plantsman/",
+  "homepage": "https://github.com/roam-garden/i/",
   "peerDependencies": {
     "react": "*"
   },
