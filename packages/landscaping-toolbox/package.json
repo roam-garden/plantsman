@@ -1,6 +1,6 @@
 {
   "name": "@roam-garden/landscaping-toolbox",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Common UI things for Roam Garden management",
   "main": "dist/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "watch": "npm run compile -- --watch",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run build",
-    "postbuild": "cpy '**/*' '!**/*.ts' ../dist/ --cwd=src/ --no-overwrite --parents",
+    "postbuild": "cpy '**/*' '!**/*.ts' '!**/*.tsx' ../dist/ --cwd=src/ --no-overwrite --parents",
     "test": "jest"
   },
   "repository": {

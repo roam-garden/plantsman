@@ -2,15 +2,17 @@ import React from "react"
 
 import {Box} from "theme-ui"
 import {Controlled as CodeMirror} from "react-codemirror2"
-import {Annotation, Editor, LintStateOptions, Pos} from "codemirror"
+import {Annotation, Editor, LintStateOptions} from "codemirror"
 import {validate} from "csstree-validator/dist/csstree-validator"
-
-import 'codemirror/mode/css/css'
-import 'codemirror/addon/lint/lint'
-import 'codemirror/addon/lint/css-lint'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/lint/lint.css'
 
+if (typeof navigator !== 'undefined') {
+  // SSR https://github.com/JedWatson/react-codemirror/issues/77
+  require('codemirror/mode/css/css')
+  require('codemirror/addon/lint/lint')
+  require('codemirror/addon/lint/css-lint')
+}
 
 interface CssEditorParams {
   cssCode: string
@@ -50,10 +52,15 @@ export const CssEditor = ({cssCode, setCssCode, cssValid, setCssValid}: CssEdito
           },
           async getAnnotations(content: string, options: LintStateOptions | any, codeMirror: Editor) {
             const errors = validate(content)
-            return errors.map(it => ({
-              from: Pos(it.line - 1, it.column - 1),
-              message: it.message || it.reference,
-            }))
+
+            // because SSR =\
+            const cm = await import('codemirror')
+            return errors.map(it => {
+              return ({
+                from: cm.Pos!(it.line - 1, it.column - 1),
+                message: it.message || it.reference,
+              })
+            })
           },
         },
       }}
