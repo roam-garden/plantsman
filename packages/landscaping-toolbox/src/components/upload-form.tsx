@@ -20,9 +20,18 @@ import {SubscriptionExistsModal} from "./subscription-exists-modal"
 interface UploadFormProps {
   allPageNames: string[]
   roamDataSupplier?: () => RoamPage[]
+  showModal?: boolean
+  onSubmit?: () => Promise<void>
 }
 
-export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) => {
+export const UploadForm = (
+  {
+    allPageNames,
+    roamDataSupplier,
+    showModal = true,
+    onSubmit,
+  }: UploadFormProps,
+) => {
   const [titlePlaceholder, setTitlePlaceholder] = useState("")
   const [title, setTitle] = useLocalState("title", "")
   const [publicTags, setPublicTags] = useLocalState<Tag[]>("publicTags", [{id: 0, name: "make-public"}])
@@ -50,7 +59,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
         marginBottom: "0.7em",
       },
     }}>
-      <SubscriptionExistsModal/>
+      {showModal && <SubscriptionExistsModal/>}
       <Container>
         <Box
           as="form"
@@ -199,6 +208,7 @@ export const UploadForm = ({allPageNames, roamDataSupplier}: UploadFormProps) =>
 
     await indicateSuccess()
     setProcessingState("")
+    await onSubmit?.()
   }
 
   function entryPageName() {
