@@ -32,7 +32,7 @@
     /* Matching theme-ui theme*/
     border: 1px solid;
     border-radius: 8px;
-    border-color: var(--theme-ui-colors-border_color,#E9EDF5);
+    border-color: var(--theme-ui-colors-border_color, #E9EDF5);
 
     line-height: inherit;
     font-size: inherit;
@@ -44,13 +44,13 @@
 }
 
 .react-tags.is-invalid {
-    border-color: var(--ck-color-base-error,#db3700);
-    box-shadow: 0 0 0 2px var(--ck-color-focus-error-shadow,rgba(255,64, 31, 0.3));
+    border-color: var(--ck-color-base-error, #db3700);
+    box-shadow: 0 0 0 2px var(--ck-color-focus-error-shadow, rgba(255, 64, 31, 0.3));
 }
 
 .react-tags.is-focused {
-    border-color: var(--theme-ui-colors-primary,#3CC68A);
-    box-shadow: 0 0 0 2px var(--theme-ui-colors-primary,#3CC68A);
+    border-color: var(--theme-ui-colors-primary, #3CC68A);
+    box-shadow: 0 0 0 2px var(--theme-ui-colors-primary, #3CC68A);
 }
 
 .react-tags__selected {
@@ -80,7 +80,7 @@
 
 .react-tags__selected-tag:hover,
 .react-tags__selected-tag:focus {
-    border-color: var(--theme-ui-colors-primary,#3CC68A);
+    border-color: var(--theme-ui-colors-primary, #3CC68A);
 }
 
 .is-disabled .react-tags__selected-tag:hover,
@@ -156,9 +156,8 @@
     border: 1px solid #D1D1D1;
     border-radius: 2px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    height:300px;
-    overflow:hidden; 
-    overflow-y:scroll;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .react-tags__suggestions li {
