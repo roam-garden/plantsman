@@ -16,6 +16,7 @@ import {CssEditor} from "./css-editor"
 import {ProgressIndicator, useSuccessIndicator} from "./progress-indicator"
 
 import {SubscriptionExistsModal} from "./subscription-exists-modal"
+import {UploadSuccessModal} from "./upload-success-modal"
 
 interface UploadFormProps {
   allPageNames: string[]
@@ -42,6 +43,7 @@ export const UploadForm = (
   const [file, setFile] = useState<File | undefined>(undefined)
   const [cssCode, setCssCode] = useLocalState("cssCode", "")
   const [cssValid, setCssValid] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [isSuccess, indicateSuccess] = useSuccessIndicator()
 
   useEffect(() => {
@@ -59,6 +61,7 @@ export const UploadForm = (
         marginBottom: "0.7em",
       },
     }}>
+      <UploadSuccessModal showModal={showSuccessModal} setShowModal={setShowSuccessModal}/>
       {showModal && <SubscriptionExistsModal/>}
       <Container>
         <Box
@@ -206,6 +209,7 @@ export const UploadForm = (
     const result = await API.put(gardenApi, "/garden", {body: payload})
     console.log(result)
 
+    setShowSuccessModal(true)
     await indicateSuccess()
     setProcessingState("")
     await onSubmit?.()
